@@ -1,0 +1,24 @@
+<component>
+	<name>NormalizeByMedian</name>
+	<version>1.0</version>
+	<doc>Digitally normalize reads in a Fasta or FastQ file.</doc>
+	<launcher type="bash">
+		<argument name="file" value="normalize-by-median.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="FASTQ"/>
+	</type-parameters>
+	<inputs>
+		<input name="inputfile" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="outputfile" type="FASTQ"></output>
+	</outputs>
+	<parameters>
+		<parameter name="kmersize" type="int" default="20"></parameter>
+		<parameter name="nhashes" type="int" default="4"></parameter>
+		<parameter name="minhashsize" type="float" default="5e10"></parameter>
+		<parameter name="cutoff" type="int" default="20"></parameter>
+	</parameters>
+</component>

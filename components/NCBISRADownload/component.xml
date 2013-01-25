@@ -1,0 +1,18 @@
+<component>
+	<name>NCBISRADownload</name>
+	<version>1.0</version>
+	<doc>Take an SRA Run ID and download its SRA run file via FTP.</doc>
+	<launcher type="python">
+		<argument name="file" value="sradownload.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="NCBISRAFile"/>
+	</type-parameters>
+	<outputs>
+		<output name="srafile" type="NCBISRAFile"></output>
+	</outputs>
+	<parameters>
+		<parameter name="srarun" type="string"></parameter>
+	</parameters>
+</component>

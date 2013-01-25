@@ -1,0 +1,23 @@
+<component>
+	<name>GetOverrepresentedKMERS</name>
+	<version>1.0</version>
+	<doc>Take in a FASTQC folder and extract the overrepresented k-mer sequences and 
+		write to a Fasta file.</doc>
+	<launcher type="python">
+		<argument name="file" value="getoverrepresentedkmers.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTQCDIR"/>
+		<type-parameter name="FASTA"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastqcdir" type="FASTQCDIR"></input>
+	</inputs>
+	<outputs>
+		<output name="fastafile" type="FASTA"></output>
+	</outputs>
+	<parameters>
+		<parameter name="percent_cutoff" type="float" default="1.0"></parameter>
+	</parameters>
+</component>

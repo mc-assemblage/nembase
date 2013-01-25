@@ -1,0 +1,22 @@
+<component>
+	<name>NCBISRAFetch</name>
+	<version>1.0</version>
+	<doc>Take the output of NCBISRASearch and fetch the results in XML.</doc>
+	<launcher type="python">
+		<argument name="file" value="srafetch.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="NCBISRASearchResultList"/>
+		<type-parameter name="NCBISRAFetchXML"/>
+	</type-parameters>
+	<inputs>
+		<input name="resultlist" type="NCBISRASearchResultList"></input>
+	</inputs>
+	<outputs>
+		<output name="srafetchxml" type="NCBISRAFetchXML"></output>
+	</outputs>
+	<parameters>
+		<parameter name="retmax" type="int" default="20"></parameter>
+	</parameters>
+</component>

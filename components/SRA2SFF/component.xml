@@ -1,0 +1,19 @@
+<component>
+	<name>SRA2SFF</name>
+	<version>1.0</version>
+	<doc>Convert an SRA Run file to the Roche 454 SFF format.</doc>
+	<launcher type="bash">
+		<argument name="file" value="sra2sff.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="NCBISRAFile"/>
+		<type-parameter name="Roche454SFFFile"/>
+	</type-parameters>
+	<inputs>
+		<input name="srafile" type="NCBISRAFile"></input>
+	</inputs>
+	<outputs>
+		<output name="sfffile" type="Roche454SFFFile"></output>
+	</outputs>
+</component>

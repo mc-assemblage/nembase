@@ -1,0 +1,21 @@
+<component>
+	<name>SFF2FASTA</name>
+	<version>1.0</version>
+	<doc>Convert an SFF file into a fasta and fasta quality file.</doc>
+	<launcher type="bash">
+		<argument name="file" value="sff2fasta.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="Roche454SFFFile"/>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="FASTAQUAL"/>
+	</type-parameters>
+	<inputs>
+		<input name="sfffile" type="Roche454SFFFile"></input>
+	</inputs>
+	<outputs>
+		<output name="fastafile" type="FASTA"></output>
+		<output name="fastaqualfile" type="FASTAQUAL"></output>
+	</outputs>
+</component>

@@ -1,0 +1,20 @@
+<component>
+	<name>NCBISRASearch</name>
+	<version>1.0</version>
+	<doc>Search the NCBI SRA database returning an NCBISRASearchResultList.</doc>
+	<launcher type="python">
+		<argument name="file" value="srasearch.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="NCBISRASearchResultList"/>
+	</type-parameters>
+	<outputs>
+		<output name="resultlist" type="NCBISRASearchResultList" array="false"></output>
+	</outputs>
+	<parameters>
+		<parameter name="term" type="string"></parameter>
+		<parameter name="field" type="string" default=""></parameter>
+		<parameter name="retmax" type="int" default="20"></parameter>
+	</parameters>
+</component>

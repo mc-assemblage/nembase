@@ -1,0 +1,22 @@
+<component>
+	<name>FASTQC</name>
+	<version>1.0</version>
+	<doc>Run the FastQC, the quality control application for FastQ data.</doc>
+	<launcher type="bash">
+		<argument name="file" value="fastqc.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="FASTQ"/>
+		<type-parameter name="FASTQCDIR"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastqfile" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="fastqcdir" type="FASTQCDIR"></output>
+	</outputs>
+	<parameters>
+		<parameter name="kmersize" type="int" default="5"></parameter>
+	</parameters>
+</component>

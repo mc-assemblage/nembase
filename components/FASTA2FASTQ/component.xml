@@ -1,0 +1,21 @@
+<component>
+	<name>FASTA2FASTQ</name>
+	<version>1.0</version>
+	<doc>Convert a fasta and fasta quality file into a fastq file.</doc>
+	<launcher type="bash">
+		<argument name="file" value="fasta2fastq.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="FASTAQUAL"/>
+		<type-parameter name="FASTQ"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastafile" type="FASTA"></input>
+		<input name="fastaqualfile" type="FASTAQUAL"></input>
+	</inputs>
+	<outputs>
+		<output name="fastqfile" type="FASTQ"></output>
+	</outputs>
+</component>
