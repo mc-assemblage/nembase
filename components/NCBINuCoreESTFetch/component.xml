@@ -1,0 +1,24 @@
+<component>
+	<name>NCBINuCoreESTFetch</name>
+	<version>1.0</version>
+	<doc>Take the output of NCBINuCoreESTSearch and fetch the results.</doc>
+	<launcher type="python">
+		<argument name="file" value="nucoreestfetch.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="NCBINuCoreESTSearchResultList"/>
+		<type-parameter name="NCBINuCoreESTFetch"/>
+	</type-parameters>
+	<inputs>
+		<input name="resultlist" type="NCBINuCoreESTSearchResultList"></input>
+	</inputs>
+	<outputs>
+		<output name="nucoreestfetch" type="NCBINuCoreESTFetch"></output>
+	</outputs>
+	<parameters>
+		<parameter name="retmax" type="int" default="20"></parameter>
+		<parameter name="retmode" type="string" default="text"></parameter>
+		<parameter name="rettype" type="string" default="fasta"></parameter>
+	</parameters>
+</component>
