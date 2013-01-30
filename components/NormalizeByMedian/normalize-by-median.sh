@@ -3,7 +3,7 @@
 
 
 
-kmersize=$( getparameter "kmer")
+kmersize=$( getparameter "kmersize")
 nhashes=$( getparameter "nhashes")
 minhashsize=$( getparameter "minhashsize")
 cutoff=$( getparameter "cutoff")
