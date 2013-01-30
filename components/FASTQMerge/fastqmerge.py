@@ -5,7 +5,7 @@ from fastq import FastqParser
 outfh = open(output, 'w')
 fqp = FastqParser()
 for fastqfile in array:
-	for rec in fqp.parse(fastqfile):
+	for rec in fqp.parse(open(fastqfile)):
 		outfh.write(str(rec) + "\n")
 outfh.close()
 
