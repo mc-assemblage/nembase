@@ -2,10 +2,10 @@
 	<name>NormalizeByMedian</name>
 	<version>1.0</version>
 	<doc>Digitally normalize reads in a Fasta or FastQ file.</doc>
-	<launcher type="bash">
-		<argument name="file" value="normalize-by-median.sh" />
+	<launcher type="python">
+		<argument name="file" value="normalize-by-median.py" />
 	</launcher>
-	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
 	<type-parameters>
 		<type-parameter name="FASTQ"/>
 	</type-parameters>

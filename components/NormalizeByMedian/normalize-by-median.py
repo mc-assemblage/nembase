@@ -69,7 +69,7 @@ for n, batch in enumerate(batchwise(screed.open(inputfile), batch_size)):
 		discarded += batch_size
 
 if -1 < n:
-	write_log("DONE with %s; kept %s of %s or %s%%" % (inputfilename, total - discarded, \
+	write_log("DONE with %s; kept %s of %s or %s%%" % (inputfile, total - discarded, \
 		total, int(100. - discarded / float(total) * 100.)))
 	write_log("Output in %s" % outputfile)
 

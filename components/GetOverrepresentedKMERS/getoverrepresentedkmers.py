@@ -20,7 +20,7 @@ while True:
 	elif isParsing:
 		parts = line.strip().split("\t")
 		if float(parts[2]) >= percent_cutoff:
-			outfh.write(">K-mer %s\n%s" % (index, parts[0]))
+			outfh.write(">K-mer %s\n%s\n" % (index, parts[0]))
 outfh.close()
 datafh.close()
 
