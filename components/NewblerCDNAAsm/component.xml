@@ -1,22 +1,21 @@
 <component>
-	<name>FASTQC</name>
+	<name>NewblerCDNAAsm</name>
 	<version>1.0</version>
-	<doc>Run the FastQC, the quality control application for FastQ data.</doc>
+	<doc>Perform a transcriptome assembly using the newbler assembler.</doc>
 	<launcher type="bash">
-		<argument name="file" value="fastqc.sh" />
+		<argument name="file" value="newblercdnaasm.sh" />
 	</launcher>
 	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
 	<type-parameters>
-		<type-parameter name="FASTQ"/>
-		<type-parameter name="FASTQCDIR"/>
+		<type-parameter name="T"/>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="NewblerASMDIR"/>
 	</type-parameters>
 	<inputs>
-		<input name="fastqfile" type="FASTQ"></input>
+		<input name="array" type="T" array="generic"></input>
+		<input name="vectortrimming" type="FASTA" optional="true"></input>
 	</inputs>
 	<outputs>
-		<output name="fastqcdir" type="FASTQCDIR"></output>
+		<output name="assemblydir" type="NewblerASMDIR"></output>
 	</outputs>
-	<parameters>
-		<parameter name="kmersize" type="int" default="5"></parameter>
-	</parameters>
 </component>

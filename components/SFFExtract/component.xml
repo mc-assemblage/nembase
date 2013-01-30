@@ -1,0 +1,20 @@
+<component>
+	<name>SFFExtract</name>
+	<version>1.0</version>
+	<doc>Extract a subset of reads from a SFF file.</doc>
+	<launcher type="bash">
+		<argument name="file" value="sffextract.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="CSV"/>
+		<type-parameter name="Roche454SFFFile"/>
+	</type-parameters>
+	<inputs>
+		<input name="sfffile" type="Roche454SFFFile"></input>
+		<input name="namelist" type="CSV"></input>
+	</inputs>
+	<outputs>
+		<output name="output" type="Roche454SFFFile"></output>
+	</outputs>
+</component>

@@ -1,7 +1,7 @@
 <component>
 	<name>GetNamesFromFASTQ</name>
 	<version>1.0</version>
-	<doc>Get a list of accessions (names/headers) from an FASTQ file.</doc>
+	<doc>Get a list of accessions (names/headers) from a FASTQ file.</doc>
 	<launcher type="python">
 		<argument name="file" value="getnamesfromfastq.py" />
 	</launcher>
