@@ -14,9 +14,9 @@ while True:
 	elif isParsing and line.startswith(">>END_MODULE"):
 		break
 	elif line.startswith(">>Overrepresented sequences"):
-		#skip the comment line
-		datafh.readline()
 		isParsing = True
+	elif line.startswith("#"):
+		continue
 	elif isParsing:
 		parts = line.strip().split("\t")
 		if float(parts[2]) >= percent_cutoff:
