@@ -1,0 +1,19 @@
+<component>
+	<name>GetNamesFromFASTQ</name>
+	<version>1.0</version>
+	<doc>Get a list of accessions (names/headers) from an FASTQ file.</doc>
+	<launcher type="python">
+		<argument name="file" value="getnamesfromfastq.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTQ"/>
+		<type-parameter name="CSV"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastqfile" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="namelist" type="CSV"></output>
+	</outputs>
+</component>
