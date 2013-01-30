@@ -12,6 +12,6 @@ then
 	mkdir $fastqcdir
 fi
 
-fastqc -o $fastqcdir -f fastq -k kmersize $fastqfile
+fastqc -o $fastqcdir -f fastq -k $kmersize $fastqfile
 
 
