@@ -7,7 +7,7 @@ assemblydir=$( getoutput "assemblydir")
 
 
 vsparam=""
-if [ -n "$vectorfile" ]
+if [ -n "$vectorfile" ] && [ -s "$vectorfile" ]
 then
 	vsparam=" -vt $vectorfile"
 fi
