@@ -45,6 +45,8 @@ outfh = open(srafetchxml, 'w')
 if isinstance(root,ElementTree.Element):
 	write_log("NCBISRAFetch: retrieved %s records" % len(root.getchildren()))
 	outfh.write(ElementTree.tostring(root))
+else:
+	outfh.write("<?xml version=\"1.0\"?><No_results />")
 outfh.close()
 
 	
