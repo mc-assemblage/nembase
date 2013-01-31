@@ -40,10 +40,11 @@ for i in range(0, len(idlist), retmax):
  	else:
  		tmp_root = ElementTree.XML(getURL(EFETCH_URL, params))
  		root.extend(tmp_root.getchildren())
-write_log("NCBISRAFetch: retrieved %s records" % len(root.getchildren()))
-outfh = open(srafetchxml, 'w')
-outfh.write(ElementTree.tostring(root))
-outfh.close()
+if isinstance(root,ElementTree.Element):
+	write_log("NCBISRAFetch: retrieved %s records" % len(root.getchildren()))
+	outfh = open(srafetchxml, 'w')
+	outfh.write(ElementTree.tostring(root))
+	outfh.close()
 
 	
 	
