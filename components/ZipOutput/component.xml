@@ -20,5 +20,6 @@
 	</outputs>
 	<parameters>
 		<parameter name="pkgname" type="string" default="root"></parameter>
+		<parameter name="append_index" type="boolean" default="false"></parameter>
 	</parameters>
 </component>
