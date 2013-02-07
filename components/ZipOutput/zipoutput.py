@@ -53,15 +53,22 @@ def zipoutput(inputfiles, archive, rootname, include_list, append_index):
 		write_log("Path: %s" % path)
 		if path.endswith("/"):
 			path = path[:-1]
-		filelist = getFileList(path, include_list)
-		write_log("Filelist: %s" % filelist)
-		for f in filelist:
+		if os.path.isfile(path):
 			index_str = ""
 			if append_index:
 				index_str = str(index)
-			nfname = os.path.join(rootname, os.path.basename(path) + index_str, \
-				f[len(path)+1:])
-			zfile.write(f, nfname, zipfile.ZIP_DEFLATED)
+			nfname = os.path.join(rootname, os.path.basename(path) + index_str)
+			zfile.write(path, nfname, zipfile.ZIP_DEFLATED)
+		else:
+			filelist = getFileList(path, include_list)
+			write_log("Filelist: %s" % filelist)
+			for f in filelist:
+				index_str = ""
+				if append_index:
+					index_str = str(index)
+				nfname = os.path.join(rootname, os.path.basename(path) + index_str, \
+					f[len(path)+1:])
+				zfile.write(f, nfname, zipfile.ZIP_DEFLATED)
 		index += 1
 	zfile.close()
 	
