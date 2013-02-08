@@ -13,8 +13,8 @@
 		<type-parameter name="MiraASMDIR"/>
 	</type-parameters>
 	<inputs>
-		<input name="ssaha2out" type="SSAHA2" optional="true"></input>
 		<input name="fastqfile" type="FASTQ"></input>
+		<input name="ssaha2out" type="SSAHA2" optional="true"></input>
 	</inputs>
 	<outputs>
 		<output name="assemblydir" type="MiraASMDIR"></output>
