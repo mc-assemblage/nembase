@@ -5,6 +5,7 @@
 ssaha2out=$( getinput "ssaha2out")
 fastqfile=$( getinput "fastqfile")
 outputdir=$( getoutput "assemblydir")
+tmpdir=$( getparameter "tmpdir")
 basepath=`dirname $outputdir`
 
 
@@ -15,6 +16,12 @@ else
 	echo "SSAHA2 file not found" >> $logfile
 fi
 
-mira --project=asm --cwd=$basepath --job=denovo,est,accurate,454 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile
+TMPDIROPT=""
+if [ -n $tmpdir ]
+then
+	TMPDIROPT="-DI:trt=$tmpdir"
+fi
+
+mira --project=asm --cwd=$basepath --job=denovo,est,accurate,454 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile $TMPDIROPT
 
 
