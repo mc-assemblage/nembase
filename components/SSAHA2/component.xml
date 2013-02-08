@@ -1,0 +1,24 @@
+<component>
+	<name>SSAHA2</name>
+	<version>1.0</version>
+	<doc>Screen a FASTA file with a file of vector sequences.</doc>
+	<launcher type="bash">
+		<argument name="file" value="ssaha2.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="FASTQ"/>
+		<type-parameter name="SSAHA2"/>
+	</type-parameters>
+	<inputs>
+		<input name="vector" type="FASTA"></input>
+		<input name="fastqfile" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="ssaha2out" type="SSAHA2"></output>
+	</outputs>
+	<parameters>
+		<parameter name="rtype" type="string" default="abi"></parameter>
+	</parameters>
+</component>
