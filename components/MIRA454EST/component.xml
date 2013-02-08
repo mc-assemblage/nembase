@@ -1,0 +1,22 @@
+<component>
+	<name>MIRA454EST</name>
+	<version>1.0</version>
+	<doc>Perform a 454 transcriptome assembly from a FASTQ file using the mira 
+		assembler.</doc>
+	<launcher type="bash">
+		<argument name="file" value="mira454est.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="SSAHA2"/>
+		<type-parameter name="FASTQ"/>
+		<type-parameter name="MiraASMDIR"/>
+	</type-parameters>
+	<inputs>
+		<input name="ssaha2out" type="SSAHA2" optional="true"></input>
+		<input name="fastqfile" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="assemblydir" type="MiraASMDIR"></output>
+	</outputs>
+</component>
