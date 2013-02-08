@@ -19,9 +19,9 @@ fi
 TMPDIROPT=""
 if [ -n $tmpdir ]
 then
-	TMPDIROPT="-DI:trt=$tmpdir"
+	TMPDIROPT=" COMMON_SETTINGS -DI:trt=$tmpdir"
 fi
 
-mira --project=asm --cwd=$basepath --job=denovo,est,accurate,454 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile $TMPDIROPT
+mira --project=asm --cwd=$basepath --job=denovo,est,accurate,454$TMPDIROPT 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile
 
 
