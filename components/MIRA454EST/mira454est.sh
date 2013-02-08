@@ -4,7 +4,7 @@
 
 ssaha2out=$( getinput "ssaha2out")
 fastqfile=$( getinput "fastqfile")
-outputdir=$( getoutput "assemblydir")
+outputdir=$( getoutput "mira_assembly")
 tmpdir=$( getparameter "tmpdir")
 basepath=`dirname $outputdir`
 
