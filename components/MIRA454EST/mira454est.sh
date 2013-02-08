@@ -22,6 +22,6 @@ then
 	TMPDIROPT=" -DI:trt=$tmpdir"
 fi
 
-mira --project=asm --cwd=$basepath --job=denovo,est,accurate,454 COMMON_SETTINGS -MI:sonfs=no$TMPDIROPT 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile
+mira --project=mira --cwd=$basepath --job=denovo,est,accurate,454 COMMON_SETTINGS -MI:sonfs=no$TMPDIROPT 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile -LR:mxti=no
 
 

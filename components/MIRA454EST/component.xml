@@ -17,7 +17,7 @@
 		<input name="ssaha2out" type="SSAHA2" optional="true"></input>
 	</inputs>
 	<outputs>
-		<output name="assemblydir" type="MiraASMDIR"></output>
+		<output name="mira_assembly" type="MiraASMDIR"></output>
 	</outputs>
 	<parameters>
 		<parameter name="tmpdir" type="string" default=""></parameter>
