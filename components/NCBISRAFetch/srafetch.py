@@ -20,7 +20,8 @@ def getURL(url, params={}):
 		try:
 			request = urllib2.Request(url)
 			response = urllib2.urlopen(request)
-			break
+			if not response:
+				raise urllib2.HTTPError(url, params, None, None, None)
 		except urllib2.HTTPError:
 			time.sleep(random.uniform(0, 0.5))
 	return response.read()
