@@ -20,9 +20,8 @@ def getURL(url, params={}):
 		try:
 			request = urllib2.Request(url)
 			response = urllib2.urlopen(request)
-			if not response:
-				raise urllib2.HTTPError(url, params, None, None, None)
 		except urllib2.HTTPError:
+			write_log("Retrying url request: %s" % url)
 			time.sleep(random.uniform(0, 0.5))
 	return response.read()
 
@@ -37,10 +36,14 @@ for i in range(0, len(idlist), retmax):
  	params = {'db':'sra', 'id':','.join(idlist[i:i+retmax])}
  	write_log("NCBISRAFetch: params: %s" % params)
  	if not isinstance(root, ElementTree.Element):
- 		root = ElementTree.XML(getURL(EFETCH_URL, params))
+ 		data = getURL(EFETCH_URL, params)
+ 		if data:
+ 			root = ElementTree.XML(data)
  	else:
- 		tmp_root = ElementTree.XML(getURL(EFETCH_URL, params))
- 		root.extend(tmp_root.getchildren())
+ 		data = getURL(EFETCH_URL, params)
+ 		if data:
+ 			tmp_root = ElementTree.XML(data)
+ 			root.extend(tmp_root.getchildren())
 
 outfh = open(srafetchxml, 'w')
 if isinstance(root,ElementTree.Element):
