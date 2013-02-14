@@ -33,19 +33,19 @@ reader = csv.reader(open(resultlist, 'rb'), quoting=csv.QUOTE_NONE)
 for row in reader:
 	if len(row) > 0: idlist.append(row[0])
 
-root = None
+root = None; tmp_root = None
 for i in range(0, len(idlist), retmax):
  	params = {'db':'sra', 'id':','.join(idlist[i:i+retmax])}
  	write_log("NCBISRAFetch: params: %s" % params)
+ 	data = getURL(EFETCH_URL, params)
+ 	try:
+ 		tmp_root = ElementTree.XML(data)
+ 	except ElementTree.ParseError:
+ 		write_log("Received an invalid xml response: %s" % data)
  	if not isinstance(root, ElementTree.Element):
- 		data = getURL(EFETCH_URL, params)
- 		if data:
- 			root = ElementTree.XML(data)
+ 		root = tmp_root
  	else:
- 		data = getURL(EFETCH_URL, params)
- 		if data:
- 			tmp_root = ElementTree.XML(data)
- 			root.extend(tmp_root.getchildren())
+ 		root.extend(tmp_root.getchildren())
 
 outfh = open(srafetchxml, 'w')
 if isinstance(root,ElementTree.Element):
