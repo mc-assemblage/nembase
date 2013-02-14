@@ -15,11 +15,13 @@ def getURL(url, params={}):
 		mechanism if the request fails."""
 	if params:
 		url += urllib.urlencode(params)
+	write_log("Url: %s" % url)
 	response = None
 	while True:
 		try:
 			request = urllib2.Request(url)
 			response = urllib2.urlopen(request)
+			break
 		except urllib2.HTTPError:
 			write_log("Retrying url request: %s" % url)
 			time.sleep(random.uniform(0, 0.5))
