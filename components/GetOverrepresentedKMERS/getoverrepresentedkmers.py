@@ -20,8 +20,7 @@ else:
 	sys.exit(2)
 	
 outfh = open(fastafile, 'w')
-isParsing = False
-overrepSeq = []; index = 1
+isParsing = False; index = 1
 while True:
 	line = datafh.readline()
 	if not line:
@@ -36,6 +35,7 @@ while True:
 		parts = line.strip().split("\t")
 		if float(parts[2]) >= percent_cutoff:
 			outfh.write(">K-mer %s\n%s\n" % (index, parts[0]))
+			index += 1
 outfh.close()
 datafh.close()
 
