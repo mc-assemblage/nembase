@@ -1,9 +1,24 @@
 from anduril.args import *
+import os
 import os.path
+import sys
 
 
-datafile = os.path.join(fastqcdir, "fastqfile_fastqc", "fastqc_data.txt")
-datafh = open(datafile)
+#Find the fastqc output directory in fastqcdir
+datafile = None
+for f in os.listdir(fastqcdir):
+	fullpath = os.path.join(fastqcdir, f)
+	if os.path.isdir(fullpath) and f.endswith("_fastqc"):
+		datafile = os.path.join(fullpath, "fastqc_data.txt")
+		break
+
+datafh = None
+if datafile and os.path.exists(datafile):
+	datafh = open(datafile)
+else:
+	write_log("Data file %s is None or does not exist" % datafile)
+	sys.exit(2)
+	
 outfh = open(fastafile, 'w')
 isParsing = False
 overrepSeq = []; index = 1
