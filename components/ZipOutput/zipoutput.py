@@ -46,7 +46,7 @@ def getFileList(path, include_list=[]):
 	return flist
 				
 
-def zipoutput(inputfiles, archive, rootname, include_list, append_index):
+def zipoutput(inputfiles, archive, rootname, include_list, append_index, is_large=False):
 	zfile = zipfile.ZipFile(archive, mode="w")
 	index = 1
 	for path in inputfiles.itervalues():
@@ -58,7 +58,10 @@ def zipoutput(inputfiles, archive, rootname, include_list, append_index):
 			if append_index:
 				index_str = str(index)
 			nfname = os.path.join(rootname, os.path.basename(path) + index_str)
-			zfile.write(path, nfname, zipfile.ZIP_DEFLATED)
+			if is_large:
+				zfile.write(path, nfname, zipfile.ZIP_STORED)
+			else:
+				zfile.write(path, nfname, zipfile.ZIP_DEFLATED)
 		else:
 			filelist = getFileList(path, include_list)
 			write_log("Filelist: %s" % filelist)
@@ -68,7 +71,10 @@ def zipoutput(inputfiles, archive, rootname, include_list, append_index):
 					index_str = str(index)
 				nfname = os.path.join(rootname, os.path.basename(path) + index_str, \
 					f[len(path)+1:])
-				zfile.write(f, nfname, zipfile.ZIP_DEFLATED)
+				if is_large:
+					zfile.write(f, nfname, zipfile.ZIP_STORED)
+				else:
+					zfile.write(f, nfname, zipfile.ZIP_DEFLATED)
 		index += 1
 	zfile.close()
 	
@@ -80,6 +86,10 @@ if fn_include:
 		if len(row) > 0:
 			include_list.append(row[0])
 	write_log("Include list: %s" % include_list)
-zipoutput(array, archive, pkgname, include_list, append_index)
+try:
+	zipoutput(array, archive, pkgname, include_list, append_index)
+except zipfile.LargeZipFile:
+	write_log("ZipFile is too large, trying to store files uncompressed.")
+	zipoutput(array, archive, pkgname, include_list, append_index, is_large=True)
 				
 				
