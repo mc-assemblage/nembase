@@ -9,12 +9,12 @@
 	</launcher>
 	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
 	<type-parameters>
-		<type-parameter name="FASTA/FASTQ"/>
+		<type-parameter name="FASTA_FASTQ"/>
 		<type-parameter name="SSAHA2"/>
 	</type-parameters>
 	<inputs>
-		<input name="inputfile" type="FASTA/FASTQ"></input>
-		<input name="vector" type="FASTA/FASTQ" optional="true"></input>
+		<input name="inputfile" type="FASTA_FASTQ"></input>
+		<input name="vector" type="FASTA_FASTQ" optional="true"></input>
 	</inputs>
 	<outputs>
 		<output name="ssaha2out" type="SSAHA2"></output>
