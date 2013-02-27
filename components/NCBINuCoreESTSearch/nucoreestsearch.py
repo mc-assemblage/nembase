@@ -23,6 +23,8 @@ def getURL(url, params={}):
 			break
 		except urllib2.HTTPError:
 			time.sleep(random.uniform(0, 0.5))
+		except urllib2.URLError:
+			time.sleep(random.uniform(1, 10))
 	return response.read()
 
 

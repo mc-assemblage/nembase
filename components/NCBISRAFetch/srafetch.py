@@ -23,8 +23,9 @@ def getURL(url, params={}):
 			response = urllib2.urlopen(request)
 			break
 		except urllib2.HTTPError:
-			write_log("Retrying url request: %s" % url)
 			time.sleep(random.uniform(0, 0.5))
+		except urllib2.URLError:
+			time.sleep(random.uniform(1, 10))
 	return response.read()
 
 
