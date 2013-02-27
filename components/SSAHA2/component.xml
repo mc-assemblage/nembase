@@ -1,19 +1,20 @@
 <component>
 	<name>SSAHA2</name>
 	<version>1.0</version>
-	<doc>Screen a FASTQ file with a FASTA file of vector sequences.</doc>
+	<doc>Screen a FASTA/FASTQ file with a FASTA/FASTQ file of vector sequences. If a file 
+		containing vector sequences is not provided, a default database of the NCBI 
+		UniVec database will be used.</doc>
 	<launcher type="bash">
 		<argument name="file" value="ssaha2.sh" />
 	</launcher>
 	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
 	<type-parameters>
-		<type-parameter name="FASTA"/>
-		<type-parameter name="FASTQ"/>
+		<type-parameter name="FASTA/FASTQ"/>
 		<type-parameter name="SSAHA2"/>
 	</type-parameters>
 	<inputs>
-		<input name="vector" type="FASTA"></input>
-		<input name="fastqfile" type="FASTQ"></input>
+		<input name="inputfile" type="FASTA/FASTQ"></input>
+		<input name="vector" type="FASTA/FASTQ" optional="true"></input>
 	</inputs>
 	<outputs>
 		<output name="ssaha2out" type="SSAHA2"></output>
