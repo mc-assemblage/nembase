@@ -9,11 +9,13 @@ tmpdir=$( getparameter "tmpdir")
 basepath=`dirname $outputdir`
 
 
+SSAHA2OPT=""
 if [ -n "$ssaha2out" ] && [ -s "$ssaha2out" ]
 then
-	echo "SSAHA2 file found" >> $logfile
-else
-	echo "SSAHA2 file not found" >> $logfile
+	vectorin=`python -c "import os.path; print os.path.join('$basepath', 'mira_ssaha2vectorscreen_in.txt')"`
+	echo "Creating soft link $vectorin to vector screen file $ssaha2out for mira to read" >> $logfile
+	ln -s $ssaha2out $vectorin
+	SSAHA2OPT=" -CL:msvs=yes"
 fi
 
 TMPDIROPT=""
@@ -22,6 +24,6 @@ then
 	TMPDIROPT=" -DI:trt=$tmpdir"
 fi
 
-mira --project=mira --job=denovo,est,accurate,454 COMMON_SETTINGS -DI:cwd=$basepath -MI:sonfs=no$TMPDIROPT 454_SETTINGS -CL:qc=no -FN:fqi=$fastqfile -LR:mxti=no
+mira --project=mira --job=denovo,est,accurate,454 COMMON_SETTINGS -DI:cwd=$basepath -MI:sonfs=no$TMPDIROPT 454_SETTINGS -CL:qc=no$SSAHA2OPT -FN:fqi=$fastqfile -LR:mxti=no
 
 
