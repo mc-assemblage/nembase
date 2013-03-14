@@ -37,11 +37,13 @@ result_count = root.findtext("Count")
 params['WebEnv'] = root.findtext("WebEnv")
 params['retstart'] = None
 params['retmax'] = retmax
-writer = csv.writer(open(resultlist, 'wb'), quoting=csv.QUOTE_NONE)
+outfh = open(resultlist, 'wb')
+writer = csv.writer(outfh, quoting=csv.QUOTE_NONE)
 for i in range(0, int(result_count), retmax):
 	params['retstart'] = str(i)
 	root = ElementTree.XML(getURL(ESEARCH_URL, params))
 	for idelement in root.findall("IdList/Id"):
 		writer.writerow([idelement.text.strip()])
+outfh.close()
 
 
