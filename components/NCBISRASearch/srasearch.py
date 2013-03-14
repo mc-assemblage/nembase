@@ -1,7 +1,6 @@
 from anduril.args import *
 from xml.etree import ElementTree
 import csv
-import os
 import random
 import time
 import urllib
@@ -47,6 +46,5 @@ for i in range(0, int(result_count), retmax):
 		writer.writerow([idelement.text.strip()])
 outfh.close()
 
-os.stat(resultlist)
 
 
