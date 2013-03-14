@@ -1,3 +1,7 @@
+#
+# This file contains code adapted from the normalize-by-median.py script, part of the Khmer package.
+# http://khmer.readthedocs.org/en/latest/introduction.html
+#
 from anduril.args import *
 from itertools import izip
 import khmer
