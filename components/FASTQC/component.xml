@@ -18,5 +18,6 @@
 	</outputs>
 	<parameters>
 		<parameter name="kmersize" type="int" default="5"></parameter>
+		<parameter name="threads" type="int"></parameter>
 	</parameters>
 </component>
