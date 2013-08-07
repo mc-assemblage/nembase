@@ -20,12 +20,7 @@ then
 	lrgparam=" -large "
 fi
 
-cpuparam=""
-if [ -n "$cpu" ]
-then
-	cpuparam=" -cpu $cpu "
-fi
 
-runAssembly -o $assemblydir$vsparam$lrgparam$cpuparam -cdna -m -nobig $arrayfiles
+runAssembly -o $assemblydir$vsparam$lrgparam -cpu $cpus -cdna -m -nobig $arrayfiles
 
 

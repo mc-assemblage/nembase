@@ -13,12 +13,6 @@ then
 	mkdir $fastqcdir
 fi
 
-threadopt=""
-if [ -n "threads" ]
-then
-	threadopt=" -t $threads "
-fi
-
-fastqc$threadopt -o $fastqcdir -f fastq -k $kmersize $fastqfile
+fastqc -t $threads -o $fastqcdir -f fastq -k $kmersize $fastqfile
 
 
