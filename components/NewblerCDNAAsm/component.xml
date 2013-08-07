@@ -18,4 +18,8 @@
 	<outputs>
 		<output name="assemblydir" type="NewblerASMDIR"></output>
 	</outputs>
+	<parameters>
+		<parameter name="large" type="boolean" default="false"></parameter>
+		<parameter name="cpu" type="int"></parameter>
+	</parameters>
 </component>
