@@ -5,7 +5,7 @@ arrayfiles=$( getarrayfiles "array")
 vectorfile=$( getinput "vectortrimming")
 assemblydir=$( getoutput "assemblydir")
 largeproject=$( getparameter "large")
-cpus=$( getparameter "cpu")
+threads=$( getparameter "cpu")
 
 
 vsparam=""
@@ -21,6 +21,6 @@ then
 fi
 
 
-runAssembly -o $assemblydir$vsparam$lrgparam -cpu $cpus -cdna -m -nobig $arrayfiles
+runAssembly -o $assemblydir$vsparam$lrgparam -cpu $threads -cdna -m -nobig $arrayfiles
 
 

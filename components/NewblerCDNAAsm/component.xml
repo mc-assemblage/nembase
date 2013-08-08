@@ -20,6 +20,6 @@
 	</outputs>
 	<parameters>
 		<parameter name="large" type="boolean" default="false"></parameter>
-		<parameter name="cpu" type="int" default="1"></parameter>
+		<parameter name="threads" type="int" default="1"></parameter>
 	</parameters>
 </component>
