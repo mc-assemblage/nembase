@@ -5,7 +5,7 @@ arrayfiles=$( getarrayfiles "array")
 vectorfile=$( getinput "vectortrimming")
 assemblydir=$( getoutput "assemblydir")
 largeproject=$( getparameter "large")
-threads=$( getparameter "cpu")
+threads=$( getparameter "threads")
 
 
 vsparam=""
