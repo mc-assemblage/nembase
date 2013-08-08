@@ -6,6 +6,7 @@ ssaha2out=$( getinput "ssaha2out")
 fastqfile=$( getinput "fastqfile")
 outputdir=$( getoutput "mira_assembly")
 tmpdir=$( getparameter "tmpdir")
+threads=$( getparameter "threads")
 basepath=`dirname $outputdir`
 
 
@@ -24,6 +25,6 @@ then
 	TMPDIROPT=" -DI:trt=$tmpdir"
 fi
 
-mira --project=mira --job=denovo,est,accurate,454 COMMON_SETTINGS -DI:cwd=$basepath -MI:sonfs=no$TMPDIROPT 454_SETTINGS -CL:qc=no$SSAHA2OPT -FN:fqi=$fastqfile -LR:mxti=no
+mira --project=mira --job=denovo,est,accurate,454 COMMON_SETTINGS -GE:not=$threads -DI:cwd=$basepath -MI:sonfs=no$TMPDIROPT 454_SETTINGS -CL:qc=no$SSAHA2OPT -FN:fqi=$fastqfile -LR:mxti=no
 
 

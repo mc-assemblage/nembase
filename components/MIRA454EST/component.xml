@@ -21,5 +21,6 @@
 	</outputs>
 	<parameters>
 		<parameter name="tmpdir" type="string" default=""></parameter>
+		<parameter name="threads" type="int" default="2"></parameter>
 	</parameters>
 </component>
