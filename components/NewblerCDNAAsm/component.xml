@@ -2,8 +2,13 @@
 	<name>NewblerCDNAAsm</name>
 	<version>1.0</version>
 	<doc>Perform a transcriptome assembly using the newbler assembler.</doc>
+	<!--
 	<launcher type="bash">
 		<argument name="file" value="newblercdnaasm.sh" />
+	</launcher>
+	-->
+	<launcher type="python">
+		<argument name="file" value="newblercdnaasm.py" />
 	</launcher>
 	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
 	<type-parameters>
@@ -21,5 +26,6 @@
 	<parameters>
 		<parameter name="large" type="boolean" default="false"></parameter>
 		<parameter name="threads" type="int" default="1"></parameter>
+		<parameter name="retries" type="int" default="0"></parameter>
 	</parameters>
 </component>
