@@ -32,11 +32,8 @@ if large:
 params += ["-cpu", str(threads), "-cdna", "-m", "-nobig", "-urt"]
 
 
-if isinstance(array, str):
-	params.append(array)
-else:
-	for inputfile in array:
-		params.append(inputfile)
+for inputfile in array:
+	params.append(inputfile)
 
 tries = retries + 1
 
@@ -45,6 +42,8 @@ while True:
 	exitcode = runCommand("runAssembly", params)
 	if exitcode > 0 and tries > 0:
 		print "Error running assembly, attempts left %s" % (tries)
+		if not "-force" in params:
+			params.append("-force")
 		time.sleep(2)
 		continue
 	else:

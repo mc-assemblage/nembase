@@ -17,7 +17,7 @@
 		<type-parameter name="NewblerASMDIR"/>
 	</type-parameters>
 	<inputs>
-		<input name="array" type="T" array="generic"></input>
+		<input name="array" type="T" array="true"></input>
 		<input name="vectortrimming" type="FASTA" optional="true"></input>
 	</inputs>
 	<outputs>
