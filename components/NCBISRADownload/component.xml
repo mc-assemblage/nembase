@@ -14,5 +14,6 @@
 	</outputs>
 	<parameters>
 		<parameter name="srarun" type="string"></parameter>
+		<parameter name="retries" type="int" default="0"></parameter>
 	</parameters>
 </component>

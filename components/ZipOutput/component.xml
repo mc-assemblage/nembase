@@ -19,7 +19,9 @@
 		<output name="archive" type="ZipFile"></output>
 	</outputs>
 	<parameters>
-		<parameter name="pkgname" type="string" default="root"></parameter>
-		<parameter name="append_index" type="boolean" default="false"></parameter>
+		<parameter name="rmPathDepth" type="int" default="0">
+			<doc>Remove the first n path elements from each file/directory when adding to 
+				the archive</doc>
+		</parameter>
 	</parameters>
 </component>

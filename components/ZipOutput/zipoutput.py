@@ -44,38 +44,36 @@ def getFileList(path, include_list=[]):
 				if isIncluded(f, include_list):
 					flist.append(f)
 	return flist
+	
+	
+def getArchiveName(path, depth):
+	"""Remove the first depth number of path elements from path."""
+	elements = []
+	while True:
+		if path == os.path.sep:
+			break
+		elements.insert(0, os.path.split(path)[1])
+		path = os.path.split(path)[0]
+	return os.path.sep.join(elements[depth:])
 				
 
-def zipoutput(inputfiles, archive, rootname, include_list, append_index, is_large=False):
-	zfile = zipfile.ZipFile(archive, mode="w")
-	index = 1
+def zipoutput(inputfiles, archive, include_list, rmPathDepth):
+	zfile = zipfile.ZipFile(archive, mode='w', allowZip64=True)
 	for path in inputfiles.itervalues():
 		write_log("Path: %s" % path)
 		if path.endswith("/"):
 			path = path[:-1]
 		if os.path.isfile(path):
-			index_str = ""
-			if append_index:
-				index_str = str(index)
-			nfname = os.path.join(rootname, os.path.basename(path) + index_str)
-			if is_large:
-				zfile.write(path, nfname, zipfile.ZIP_STORED)
-			else:
-				zfile.write(path, nfname, zipfile.ZIP_DEFLATED)
+			nfname = getArchiveName(path, rmPathDepth)
+			zfile.write(path, nfname)
 		else:
 			filelist = getFileList(path, include_list)
 			write_log("Filelist: %s" % filelist)
 			for f in filelist:
-				index_str = ""
-				if append_index:
-					index_str = str(index)
-				nfname = os.path.join(rootname, os.path.basename(path) + index_str, \
-					f[len(path)+1:])
-				if is_large:
-					zfile.write(f, nfname, zipfile.ZIP_STORED)
-				else:
-					zfile.write(f, nfname, zipfile.ZIP_DEFLATED)
-		index += 1
+				nfname = getArchiveName(f, rmPathDepth)
+				write_log("File: %s" % f)
+				write_log("ArcName: %s" % nfname)
+				zfile.write(f, nfname)
 	zfile.close()
 	
 	
@@ -86,10 +84,6 @@ if fn_include:
 		if len(row) > 0:
 			include_list.append(row[0])
 	write_log("Include list: %s" % include_list)
-try:
-	zipoutput(array, archive, pkgname, include_list, append_index)
-except zipfile.LargeZipFile:
-	write_log("ZipFile is too large, trying to store files uncompressed.")
-	zipoutput(array, archive, pkgname, include_list, append_index, is_large=True)
+zipoutput(array, archive, include_list, rmPathDepth)
 				
 				

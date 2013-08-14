@@ -32,7 +32,7 @@ if large:
 params += ["-cpu", str(threads), "-cdna", "-m", "-nobig", "-urt"]
 
 
-for inputfile in array:
+for key, inputfile in array.items():
 	params.append(inputfile)
 
 tries = retries + 1
