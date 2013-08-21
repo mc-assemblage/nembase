@@ -1,0 +1,24 @@
+<component>
+	<name>USearchClusterFast</name>
+	<version>1.0</version>
+	<doc>Cluster a file of FASTA sequences producing a FASTA file of the centroids (seeds) 
+		and a result file containing the clusters.</doc>
+	<launcher type="bash">
+		<argument name="file" value="usearchclusterfast.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="UCFILE"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastafile" type="FASTA"></input>
+	</inputs>
+	<outputs>
+		<output name="resultsuc" type="UCFILE"></output>
+		<output name="resultsfa" type="FASTA"></output>
+	</outputs>
+	<parameters>
+		<parameter name="id" type="float" default="0.9"></parameter>
+	</parameters>
+</component>

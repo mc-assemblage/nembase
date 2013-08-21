@@ -11,7 +11,7 @@
 		<type-parameter name="FASTA"/>
 	</type-parameters>
 	<inputs>
-		<input name="array" type="T" array="true"></input>
+		<input name="fastafiles" type="T" array="true"></input>
 	</inputs>
 	<outputs>
 		<output name="output" type="FASTA"></output>
