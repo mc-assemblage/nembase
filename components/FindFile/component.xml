@@ -1,0 +1,23 @@
+<component>
+	<name>FindFile</name>
+	<version>1.0</version>
+	<doc>Recursively walk through a base directory and find a file given a name or 
+		unix file pattern.</doc>
+	<launcher type="python">
+		<argument name="file" value="findfile.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="T"/>
+		<type-parameter name="Directory"/>
+	</type-parameters>
+	<inputs>
+		<input name="basepath" type="Directory"></input>
+	</inputs>
+	<outputs>
+		<output name="filesfound" array="true" type="T"></output>
+	</outputs>
+	<parameters>
+		<parameter name="fpattern" type="string"></parameter>
+	</parameters>
+</component>

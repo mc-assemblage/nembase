@@ -1,0 +1,18 @@
+<component>
+	<name>USearchSort</name>
+	<version>1.0</version>
+	<doc>Sort the sequences in a FASTA file by their length.</doc>
+	<launcher type="bash">
+		<argument name="file" value="usearchsort.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastafile" type="FASTA"></input>
+	</inputs>
+	<outputs>
+		<output name="sortedfile" type="FASTA"></output>
+	</outputs>
+</component>

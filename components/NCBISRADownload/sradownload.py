@@ -34,8 +34,6 @@ def sradownload(cf):
 				cf.write_log("Retrying, attempts left %s" % tries)
 				time.sleep(2)
 	return constants.OK
-	
-	
 anduril.main(sradownload)
 
 

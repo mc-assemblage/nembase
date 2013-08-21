@@ -1,0 +1,28 @@
+<component>
+	<name>CSV2FASTAII</name>
+	<version>1.0</version>
+	<doc>Convert a CSV file to a FASTA file.</doc>
+	<launcher type="python">
+		<argument name="file" value="csv2fasta.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="CSV"/>
+		<type-parameter name="FASTA"/>
+	</type-parameters>
+	<inputs>
+		<input name="csvfile" type="CSV"></input>
+	</inputs>
+	<outputs>
+		<output name="fastafile" type="FASTA"></output>
+	</outputs>
+	<parameters>
+		<parameter name="quotechar" type="string" default='"'></parameter>
+		<parameter name="delimiter" type="string" default="tab">
+			<doc>Use the 'tab' string to specify the '\t' character as it doesn't seem 
+				to parse correctly.</doc>
+		</parameter>
+		<parameter name="headercol" type="int" default="0"></parameter>
+		<parameter name="sequencecol" type="int" default="1"></parameter>
+	</parameters>
+</component>

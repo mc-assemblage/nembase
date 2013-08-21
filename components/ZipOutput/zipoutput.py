@@ -20,6 +20,9 @@ def isIncluded(f, include_list):
 
 
 def getFileList(path, include_list=[]):
+	"""Recursively walk through a directory structure beginning at path and return the 
+		list of files encountered. If include_list is given, only filenames included 
+		in the list (unix file patterns are supported) will be in the returned."""
 	def walktree(top=".", depthfirst=True):
 		names = os.listdir(top)
 		if not depthfirst:
@@ -57,7 +60,13 @@ def getArchiveName(path, depth):
 	return os.path.sep.join(elements[depth:])
 				
 
-def zipoutput(inputfiles, archive, include_list, rmPathDepth):
+def zipoutput(inputfiles, archive, include_list=[], rmPathDepth=0):
+	"""Add an array of files and directories to a zip file. archive is the name (and path)
+		of the zip file to be created, include_list (if given) is a list of filenames 
+		(unix file patterns are supported) that should only be included in the zip file. 
+		By default, the full path structure of each file added to the zip file is 
+		preserved. rmPathDepth removes n path elements from the beginning of each file 
+		path."""
 	zfile = zipfile.ZipFile(archive, mode='w', allowZip64=True)
 	for path in inputfiles.itervalues():
 		write_log("Path: %s" % path)
