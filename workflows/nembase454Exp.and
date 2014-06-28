@@ -1,0 +1,161 @@
+#!/usr/bin/env anduril-runner
+//$ -b /home/mclarke2/anduril/nembase/
+//$ -d /home/mclarke2/execdir/nembase454/
+//$ --hosts /home/mclarke2/anduril/config/local.conf
+//$ --log /home/mclarke2/logdir/nembase454/
+//$ --threads 12
+
+
+ASM_KEEP_MIRA=INPUT(path="/home/mclarke2/anduril/workflows/wf.in/include-mira.txt")
+
+srasearch = record()
+srafetch = record()
+getrunsbyplatform = record()
+getexpaccessions = record()
+
+
+outputAsmMira = record()
+outputFastq = record()
+outputVec = record()
+
+
+for row: std.itercsv("/home/mclarke2/anduril/workflows/wf.in/nematodes454.csv") {
+	SRA_SEARCHTERM = std.concat(row.Organism, "[Organism] AND transcriptom*", sep="")
+	ORG = std.strReplace(row.Organism, " ", "_")
+	
+	srasearch[ORG] = NCBISRASearch(term=SRA_SEARCHTERM, @host="auto")
+	srafetch[ORG] = NCBISRAFetch(resultlist=srasearch[ORG].resultlist, @host="auto")
+	
+	getrunsbyplatform[ORG] = GetRunsByPlatform(
+		srafetchxml=srafetch[ORG].srafetchxml, 
+		platform='454', 
+		@host="auto")
+	
+	sraDownload = record()
+	sra2SFF = record()
+	sra2Fastq = record()
+	
+	for iter: std.itercsv(getrunsbyplatform[ORG].srarunlist) {
+		sraDownload[iter.NCBISRARunID] = NCBISRADownload(
+			srarun=iter.NCBISRARunID, 
+			retries=2, 
+			@host="auto")
+			
+		sra2SFF[iter.NCBISRARunID] = SRA2SFF(
+			srafile=sraDownload[iter.NCBISRARunID].srafile, 
+			@host="auto")
+			
+		sra2Fastq[iter.NCBISRARunID] = SRA2FASTQ(
+			srafile=sraDownload[iter.NCBISRARunID].srafile,
+			srafetchxml=srafetch[ORG].srafetchxml,
+			accession=iter.NCBISRARunID, 
+			@host="auto")
+	}
+	
+	getexpaccessions[ORG] = GetExpAccessions(
+		srafetchxml=srafetch[ORG].srafetchxml,
+		platform='454',
+		@host="auto")
+		
+	sffFileArray = record()
+	fastqFileArray = record()
+	
+	sffFileArray[ORG] = std.makeArray(sra2SFF)
+	fastqFileArray[ORG] = std.makeArray(sra2Fastq)
+	
+	getrunsbyexp = record()
+	expFilesFq = record()
+	expMergedFq = record()
+	
+	normByMedian = record()
+	fastQC = record()
+	overRepKmers = record()
+	ssaha2Out = record()
+	miraAssembly = record()
+	
+	outputAsmMira[ORG] = record()
+	outputFastq[ORG] = record()
+	outputVec[ORG] = record()
+		
+	for iter: std.itercsv(getexpaccessions[ORG].sraexplist) {
+		getrunsbyexp[iter.NCBISRAExpID] = GetRunsByExp(
+			srafetchxml=srafetch[ORG].srafetchxml,
+			accession=iter.NCBISRAExpID,
+			platform='454',
+			@host="auto")
+			
+		expFilesFq[iter.NCBISRAExpID] = GetFromArrayByKey(
+			in_array=fastqFileArray,
+			keys=getrunsbyexp[iter.NCBISRAExpID].srarunlist,
+			@host="auto")
+			
+		expMergedFq[iter.NCBISRAExpID] = FASTQMerge(
+			in_array=expFilesFq[iter.NCBISRAExpID].out_array,
+			@host="auto")	
+		
+		normByMedian[iter.NCBISRAExpID] = NormalizeByMedian(
+			inputfile=expMergedFq[iter.NCBISRAExpID].output,
+			minhashsize=16e9,
+			@host="auto")
+			
+		fastQC[iter.NCBISRAExpID] = FASTQC(
+			fastqfile=expMergedFq[iter.NCBISRAExpID].output,
+			kmersize=8,
+			threads=8,
+			@host="auto")
+			
+		overRepKmers[iter.NCBISRAExpID] = GetOverrepresentedKMERS(
+			fastqcdir=fastQC[iter.NCBISRAExpID].fastqcdir,
+			@host="auto")
+			
+		ssaha2Out[iter.NCBISRAExpID] = SSAHA2(
+			vector=overRepKmers[iter.NCBISRAExpID].fastafile,
+			inputfile=normByMedian[iter.NCBISRAExpID].outputfile,
+			rtype="454",
+			@host="auto")
+		
+		miraAssembly[iter.NCBISRAExpID] = MIRA454EST(
+			fastqfile=normByMedian[iter.NCBISRAExpID].outputfile,
+			ssaha2out=ssaha2Out[iter.NCBISRAExpID].ssaha2out,
+			tmpdir="/tmp",
+			threads=4,
+			@host="auto")		
+			
+		outputAsmMira[ORG][iter.NCBISRAExpID] = miraAssembly[iter.NCBISRAExpID].mira_assembly
+		outputFastq[ORG][iter.NCBISRAExpID] = normByMedian[iter.NCBISRAExpID].outputfile
+		outputVec[ORG][iter.NCBISRAExpID] = overRepKmers[iter.NCBISRAExpID].fastafile
+	}
+}
+
+
+zipAsmMira454 = record()
+zipFastq454 = record()
+zipVec454 = record()
+
+for ORG, portValue: outputAsmNewb {
+		
+	zipAsmMira454[ORG] = ZipOutput(
+		std.makeArray(outputAsmMira[ORG]), 
+		fn_include=ASM_KEEP_MIRA, 
+		rmPathDepth=3, 
+		@host="local")
+		
+	zipFastq454[ORG] = ZipOutput(
+		std.makeArray(outputFastq[ORG]), 
+		rmPathDepth=3,
+		@host="local")
+		
+	zipVec454[ORG] = ZipOutput(
+		std.makeArray(outputVec[ORG]), 
+		rmPathDepth=3,
+		@host="local")
+}
+
+for ORG, portValue: zipAsmNewbler454 {
+	OUTPUT(zipAsmMira454[ORG])
+	OUTPUT(zipFastq454[ORG])
+	OUTPUT(zipVec454[ORG])
+}
+
+
+

@@ -1,0 +1,116 @@
+#!/usr/bin/env anduril-runner
+//$ -b /home/mclarke2/anduril/nembase/
+//$ -d /home/mclarke2/execdir/nembaseEST/
+//$ --hosts /home/mclarke2/anduril/config/small_local.conf
+//$ --log /home/mclarke2/logdir/nembaseEST/
+//$ --threads 2
+
+
+ASM_KEEP_MIRA=INPUT(path="/home/mclarke2/anduril/workflows/wf.in/include-mira.txt")
+
+nucSearch = record()
+nucFetch = record()
+ssaha2Out = record()
+miraAssembly = record()
+miraCtgReads = record()
+miraCtgReadList = record()
+miraUnAssembledReads = record()
+miraAsmFa = record()
+ctgSet = record()
+
+outputAsmMira = record()
+outputCtgSet = record()
+
+for row: std.itercsv("/home/mclarke2/anduril/workflows/wf.in/nematodes.csv") {
+	NUC_SEARCHTERM = std.concat(row.Organism, "[Organism]", sep="")
+	ORG = std.strReplace(row.Organism, " ", "_")
+
+	nucSearch[ORG] = NCBINuCoreESTSearch(
+		term=NUC_SEARCHTERM, 
+		retmax=2000,
+		@host="auto")
+	
+	nucFetch[ORG] = NCBINuCoreESTFetch(
+		resultlist=nucSearch[ORG].resultlist, 
+		retmode="text", 
+		rettype="fasta",
+		retmax=200,
+		@host="auto")
+	
+	ssaha2Out[ORG] = SSAHA2(
+		inputfile=nucFetch[ORG].nucoreestfetch,
+		rtype="abi",
+		@host="auto")
+			
+	miraAssembly[ORG] = MIRAEST(
+		fastafile=nucFetch[ORG].nucoreestfetch,
+		ssaha2out=ssaha2Out[ORG].ssaha2out,
+		tmpdir="/tmp",
+		threads=2,
+		@host="auto")
+		
+	miraCtgReads[ORG] = FindFile(
+		basepath=miraAssembly[ORG].mira_assembly,
+		fpattern="mira_info_contigreadlist.txt",
+		@host="auto")
+		
+	miraAsmFa[ORG] = FindFile(
+		basepath=miraAssembly[ORG].mira_assembly,
+		fpattern="mira_out.unpadded.fasta")
+		
+	ctgFilesFound = false
+	asmFilesFound = false
+	for rec: std.iterArray(miraCtgReads[ORG].filesfound) {
+		ctgFilesFound = true
+	}
+	for rec: std.iterArray(miraAsmFa[ORG].filesfound) {
+		asmFilesFound = true
+	}
+	if (ctgFilesFound && asmFilesFound) {
+		miraCtgReadList[ORG] = CSVFilterII(
+			inputfile=miraCtgReads[ORG].filesfound["0"],
+			commentchar="#",
+			collist="1",
+			@host="auto")
+		
+		miraUnAssembledReads[ORG] = GetFromFASTAByName(
+			namelist=miraCtgReadList[ORG].outputfile,
+			fastafile=nucFetch[ORG].nucoreestfetch,
+			partial=true,
+			negate=true,
+			@host="auto")
+
+		ctgSet[ORG] = std.makeArray({
+			miraAsmFa[ORG].filesfound["0"],
+			miraUnAssembledReads[ORG].outputfile})
+		
+		outputAsmMira[ORG] = miraAssembly[ORG].mira_assembly
+		outputCtgSet[ORG] = FASTAMerge(
+			fastafiles=ctgSet[ORG])
+	}
+	else {
+		std.echo("#### No output files for " + ORG)
+	}
+}
+
+zipAsmMiraEST = record()
+zipCtgSetEST = record()
+
+for ORG, portValue: outputAsmMira {
+	zipAsmMiraEST[ORG] = ZipOutput(
+		std.makeArray(outputAsmMira[ORG]), 
+		fn_include=ASM_KEEP_MIRA, 
+		rmPathDepth=3, 
+		@host="local")
+	zipCtgSetEST[ORG] = ZipOutput(
+		std.makeArray(outputCtgSet[ORG]),
+		rmPathDepth=3,
+		@host="local")
+}
+
+for ORG, portValue: zipAsmMiraEST {
+	OUTPUT(zipAsmMiraEST[ORG])
+	OUTPUT(zipCtgSetEST[ORG])
+}
+	
+	

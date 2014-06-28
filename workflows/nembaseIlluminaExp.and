@@ -1,0 +1,175 @@
+#!/usr/bin/env anduril-runner
+//$ -b /home/mclarke2/anduril/nembase/
+//$ -d /home/mclarke2/execdir/nembaseIllumina/
+//$ --hosts /home/mclarke2/anduril/config/local.conf
+//$ --log /home/mclarke2/logdir/nembaseIllumina/
+//$ --threads 6
+
+
+ASM_KEEP_TRINITY=INPUT(path="/home/mclarke2/anduril/workflows/wf.in/include-trinity.txt")
+ASM_KEEP_OASES=INPUT(path="/home/mclarke2/anduril/workflows/wf.in/include-oases.txt")
+ADAPTER_FILE=INPUT(path="/home/mclarke2/data/adapters.fa")
+
+srasearch = record()
+srafetch = record()
+getrunsbyplatform = record()
+getexpaccessions = record()
+
+
+outputAsmTrinity = record()
+outputAsmOases = record()
+
+
+for row: std.itercsv("/home/mclarke2/anduril/workflows/wf.in/nematodesIllumina.csv") {
+	SRA_SEARCHTERM = std.concat(row.Organism, "[Organism] AND transcriptom*", sep="")
+	ORG = std.strReplace(row.Organism, " ", "_")
+	
+	srasearch[ORG] = NCBISRASearch(term=SRA_SEARCHTERM, @host="auto")
+	srafetch[ORG] = NCBISRAFetch(resultlist=srasearch[ORG].resultlist, @host="auto")
+	
+	getrunsbyplatform[ORG] = GetRunsByPlatform(
+		srafetchxml=srafetch[ORG].srafetchxml, 
+		platform='Illumina', 
+		@host="auto")
+	
+	sraDownload = record()
+	sra2SFF = record()
+	sra2Fastq = record()
+	
+	for iter: std.itercsv(getrunsbyplatform[ORG].srarunlist) {
+		sraDownload[iter.NCBISRARunID] = NCBISRADownload(
+			srarun=iter.NCBISRARunID, 
+			retries=2,
+			sleep_interval=30, 
+			@host="auto")
+			
+		sra2Fastq[iter.NCBISRARunID] = SRA2FASTQ(
+			srafile=sraDownload[iter.NCBISRARunID].srafile,
+			srafetchxml=srafetch[ORG].srafetchxml,
+			accession=iter.NCBISRARunID, 
+			@host="auto")
+	}
+	
+	getexpaccessions[ORG] = GetExpAccessions(
+		srafetchxml=srafetch[ORG].srafetchxml,
+		platform='Illumina',
+		@host="auto")
+		
+	fastqFileArray = record()
+	fastqFileArray[ORG] = std.makeArray(sra2Fastq)
+	
+	getrunsbyexp = record()
+	expFilesFq = record()
+	expMergedPe = record()
+	expMergedFq = record()
+	
+	fastQC = record()
+	overRepKmers = record()
+	adapterArray = record()
+	adapters = record()
+	fastqMCF = record()
+	
+	trinityASM = record()
+	allFilteredReadArray = record()
+	allFilteredReads = record()
+	oasesASM = record()
+	
+	outputAsmTrinity[ORG] = record()
+	outputAsmOases[ORG] = record()
+		
+	for iter: std.itercsv(getexpaccessions[ORG].sraexplist) {
+		getrunsbyexp[iter.NCBISRAExpID] = GetRunsByExp(
+			srafetchxml=srafetch[ORG].srafetchxml,
+			accession=iter.NCBISRAExpID,
+			platform='Illumina',
+			@host="auto")
+			
+		expFilesFq[iter.NCBISRAExpID] = GetFromArrayByKey(
+			in_array=fastqFileArray,
+			keys=getrunsbyexp[iter.NCBISRAExpID].srarunlist,
+			@host="auto")
+			
+		expMergedPe[iter.NCBISRAExpID] = SepPairsAndSingleEndsExp(
+			fastqfiles=expFilesFq[iter.NCBISRAExpID].out_array,
+			srafetchxml=srafetch[ORG].srafetchxml,
+			@host="auto")	
+		
+		expMergedFq[iter.NCBISRAExpID] = FASTQMerge(
+			in_array=expFilesFq[iter.NCBISRAExpID].out_array,
+			@host="auto")
+			
+		fastQC[iter.NCBISRAExpID] = FASTQC(
+			fastqfile=expMergedFq[iter.NCBISRAExpID].output,
+			kmersize=8,
+			threads=8,
+			@host="auto")
+			
+		overRepKmers[iter.NCBISRAExpID] = GetOverrepresentedKMERS(
+			fastqcdir=fastQC[iter.NCBISRAExpID].fastqcdir,
+			@host="auto")
+			
+		adapterArray[iter.NCBISRAExpID] = std.makeArray({
+			overRepKmers[iter.NCBISRAExpID].fastafile,
+			ADAPTER_FILE})
+			
+		adapters[iter.NCBISRAExpID] = FASTAMerge(adapterArray, @host="auto")
+		
+		fastqMCF[iter.NCBISRAExpID] = FASTQMCF(
+			left=expMergedPe[iter.NCBISRAExpID].left,
+			right=expMergedPe[iter.NCBISRAExpID].right,
+			single=expMergedPe[iter.NCBISRAExpID].single,
+			adapters=adapters[iter.NCBISRAExpID].output,
+			rmDupLength=35,
+			@host="auto")
+			
+		trinityASM[iter.NCBISRAExpID] = TrinityASM(
+			inputleft=fastqMCF[iter.NCBISRAExpID].outputleft,
+			inputright=fastqMCF[iter.NCBISRAExpID].outputright,
+			inputsingle=fastqMCF[iter.NCBISRAExpID].outputsingle,
+			CPU=8,
+			jellymem="100G",
+			@host="auto")
+			
+		allFilteredReadArray[iter.NCBISRAExpID] = std.makeArray({
+			fastqMCF[iter.NCBISRAExpID].outputleft,
+			fastqMCF[iter.NCBISRAExpID].outputright,
+			fastqMCF[iter.NCBISRAExpID].outputsingle})
+			
+		allFilteredReads[iter.NCBISRAExpID] = FASTQMerge(
+			allFilteredReadArray, 
+			@host="auto")
+		
+		oasesASM[iter.NCBISRAExpID] = OasesASM(
+			fastqfile=allFilteredReads[iter.NCBISRAExpID].output,
+			trinitykmersize=trinityASM[iter.NCBISRAExpID].assemblydir,
+			@host="auto")
+			
+		outputAsmTrinity[ORG][iter.NCBISRAExpID] = trinityASM[iter.NCBISRAExpID].assemblydir
+		outputAsmOases[ORG][iter.NCBISRAExpID] = oasesASM[iter.NCBISRAExpID].assemblydir
+	}
+}
+
+zipAsmTrinityIllumina = record()
+zipAsmOasesIllumina = record()
+
+for ORG, portValue: outputAsmTrinity {
+		
+	zipAsmTrinityIllumina[ORG] = ZipOutput(
+		std.makeArray(outputAsmTrinity[ORG]), 
+		fn_include=ASM_KEEP_TRINITY, 
+		rmPathDepth=3, 
+		@host="local")
+		
+	zipAsmOasesIllumina[ORG] = ZipOutput(
+		std.makeArray(outputAsmOases[ORG]),
+		fn_include=ASM_KEEP_OASES,
+		rmPathDepth=3,
+		@host="local")
+}
+
+for ORG, portValue: zipAsmTrinityIllumina {
+	OUTPUT(zipAsmTrinityIllumina[ORG])
+	OUTPUT(zipAsmOasesIllumina[ORG])
+}
+
+
