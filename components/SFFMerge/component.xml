@@ -2,16 +2,16 @@
 	<name>SFFMerge</name>
 	<version>1.0</version>
 	<doc>Merge a list of SFF files.</doc>
-	<launcher type="bash">
-		<argument name="file" value="sffmerge.sh" />
+	<launcher type="python">
+		<argument name="file" value="sffmerge.py" />
 	</launcher>
-	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
 	<type-parameters>
 		<type-parameter name="T"/>
 		<type-parameter name="Roche454SFFFile"/>
 	</type-parameters>
 	<inputs>
-		<input name="array" type="T" array="true"></input>
+		<input name="in_array" type="T" array="true"></input>
 	</inputs>
 	<outputs>
 		<output name="output" type="Roche454SFFFile"></output>

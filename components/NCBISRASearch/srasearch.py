@@ -2,6 +2,7 @@ from anduril import constants
 from xml.etree import ElementTree
 import anduril.main
 import csv
+import httplib
 import random
 import time
 import urllib
@@ -25,6 +26,8 @@ def getURL(url, params={}):
 		except urllib2.HTTPError:
 			time.sleep(random.uniform(0, 0.5))
 		except urllib2.URLError:
+			time.sleep(random.uniform(1, 10))
+		except httplib.BadStatusLine:
 			time.sleep(random.uniform(1, 10))
 	return response.read()
 

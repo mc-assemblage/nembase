@@ -1,5 +1,6 @@
-from anduril.args import *
+from anduril import constants
 from xml.etree import ElementTree
+import anduril.main
 import csv
 import random
 import time
@@ -25,23 +26,33 @@ def getURL(url, params={}):
 			time.sleep(random.uniform(0, 0.5))
 		except urllib2.URLError:
 			time.sleep(random.uniform(1, 10))
+		except httplib.BadStatusLine:
+			time.sleep(random.uniform(1, 10))
 	return response.read()
 
 
-params = {'db':'nucest', 'term':term, 'usehistory':'y'}
-if field:
-	params['field'] = field
-write_log("NCBINuCoreESTSearch: searching with params %s" % params)
-root = ElementTree.XML(getURL(ESEARCH_URL, params))
-result_count = root.findtext("Count")
-params['WebEnv'] = root.findtext("WebEnv")
-params['retstart'] = None
-params['retmax'] = retmax
-writer = csv.writer(open(resultlist, 'wb'), quoting=csv.QUOTE_NONE)
-for i in range(0, int(result_count), retmax):
-	params['retstart'] = str(i)
+def nucoreESTSearch(cf):
+	"""Search the NCBI NuCore database and write the result ids to a file."""
+	term = cf.get_parameter('term', 'string')
+	params = {'db':'nucest', 'term':term, 'usehistory':'y'}
+	field = cf.get_parameter('field', 'string')
+	if field:
+		params['field'] = field
+	cf.write_log("NCBINuCoreESTSearch: searching with params %s" % params)
 	root = ElementTree.XML(getURL(ESEARCH_URL, params))
-	for idelement in root.findall("IdList/Id"):
-		writer.writerow([idelement.text.strip()])
+	result_count = root.findtext("Count")
+	params['WebEnv'] = root.findtext("WebEnv")
+	params['retstart'] = None
+	params['retmax'] = cf.get_parameter('retmax', 'int')
+	outfh = open(cf.get_output('resultlist'), 'wb')
+	writer = csv.writer(outfh, quoting=csv.QUOTE_NONE)
+	for i in range(0, int(result_count), params['retmax']):
+		params['retstart'] = str(i)
+		root = ElementTree.XML(getURL(ESEARCH_URL, params))
+		for idelement in root.findall("IdList/Id"):
+			writer.writerow([idelement.text.strip()])
+	outfh.close()
+	return constants.OK
+anduril.main(nucoreESTSearch)
 
 

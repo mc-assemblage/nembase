@@ -88,7 +88,7 @@ def zipoutput(inputfiles, archive, include_list=[], rmPathDepth=0):
 	
 include_list = []
 if fn_include:
-	reader = csv.reader(open(fn_include, 'rb'))
+	reader = csv.reader(open(fn_include, 'U'))
 	for row in reader:
 		if len(row) > 0:
 			include_list.append(row[0])

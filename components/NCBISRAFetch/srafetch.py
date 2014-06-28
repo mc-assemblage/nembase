@@ -2,6 +2,7 @@ from anduril import constants
 from xml.etree import ElementTree
 import anduril.main
 import csv
+import httplib
 import random
 import time
 import urllib
@@ -26,13 +27,15 @@ def getURL(url, params={}):
 			time.sleep(random.uniform(0, 0.5))
 		except urllib2.URLError:
 			time.sleep(random.uniform(1, 10))
+		except httplib.BadStatusLine:
+			time.sleep(random.uniform(1, 10))
 	return response.read()
 
 
 def srafetch(cf):
 	"""Read a file containing a list of NCBI SRA ids and retrieve the records in XML."""
 	idlist = []
-	reader = csv.reader(open(cf.get_input('resultlist'), 'rb'), quoting=csv.QUOTE_NONE)
+	reader = csv.reader(open(cf.get_input('resultlist'), 'U'), quoting=csv.QUOTE_NONE)
 	for row in reader:
 		if len(row) > 0: idlist.append(row[0])
 

@@ -1,27 +1,28 @@
-from anduril.args import *
-from xml.etree import ElementTree
+from anduril import constants
+from sraxmlparser import SRAXMLParser
+import anduril.main
 import csv
 
 
-if not platform in ["454", "Illumina"]:
-	write_error("Unknown sequencing platform %s" % platform)
-	
-
-accessions = []
-root = ElementTree.parse(srafetchxml)
-for exp_package in root.findall("EXPERIMENT_PACKAGE"):
-	if platform == '454' and \
-		len(exp_package.findall("EXPERIMENT/PLATFORM/LS454")) > 0:
-		runs = exp_package.findall("RUN_SET/RUN")
-		accessions += map(lambda x: x.get("accession"), runs)
-	elif platform == 'Illumina' and \
-		len(exp_package.findall("EXPERIMENT/PLATFORM/ILLUMINA")) > 0:
-		runs = exp_package.findall("RUN_SET/RUN")
-		accessions += map(lambda x: x.get("accession"), runs)
-writer = csv.writer(open(srarunlist, 'wb'), quoting=csv.QUOTE_NONE)
-writer.writerow(["NCBISRARunID"])
-for accession in accessions:
-	writer.writerow([accession])
-write_log("GetRunsByPlatform: wrote %s run accessions" % len(accessions))
+def getRunsByPlatform(cf):
+	"""Write the run accessions from a particular platform to a file."""
+	platform = cf.get_parameter('platform', 'string')
+	if not platform in ['454', 'Illumina']:
+		cf.write_error("Unknown sequencing platform %s" % platform)
+		return constants.GENERIC_ERROR
+	srafetchxml = cf.get_input('srafetchxml')
+	srarunlist = cf.get_output('srarunlist')
+	sraxmlparser = SRAXMLParser()
+	runs = sraxmlparser.parse(srafetchxml)
+	writer = csv.writer(open(srarunlist, 'wb'), quoting=csv.QUOTE_NONE)
+	writer.writerow(['NCBISRARunID'])
+	num_accessions = 0
+	for run in runs:
+		if run.platform == platform:
+			writer.writerow([run.accession])
+			num_accessions += 1
+	cf.write_log("GetRunsByPlatform: wrote %s run accessions" % num_accessions)
+	return constants.OK
+anduril.main(getRunsByPlatform)
 
 

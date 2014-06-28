@@ -13,17 +13,17 @@ def sradownload(cf):
 		connection issues, so for this reason we implement a retry mechanism."""
 	srarun = cf.get_parameter('srarun', 'string')
 	tries = cf.get_parameter('retries', 'int') + 1
+	sleepint = cf.get_parameter('sleep_interval', 'int')
 	while True:
+		ftp = FTP('ftp-trace.ncbi.nih.gov')
+		ftp.login()
 		try:
-			ftp = FTP('ftp-trace.ncbi.nih.gov')
-			ftp.login()
 			seqdir = FTP_FILE_PATH % (srarun[:3], srarun[:6], srarun)
 			cf.write_log("NCBISRADownload: changing to ftp directory %s" % seqdir)
 			ftp.cwd(seqdir)
 			cf.write_log("NCBISRADownload: retrieving sequence file %s.sra" % srarun)
 			ftp.retrbinary("RETR %s.sra" % srarun, open(\
 				cf.get_output('srafile'), 'wb').write)
-			ftp.quit()
 			break
 		except Exception, e:
 			cf.write_error("NCBISRADownload error: %s" % str(e))
@@ -32,7 +32,9 @@ def sradownload(cf):
 				return constants.GENERIC_ERROR
 			else:
 				cf.write_log("Retrying, attempts left %s" % tries)
-				time.sleep(2)
+				time.sleep(sleepint)
+		finally:
+			ftp.quit()
 	return constants.OK
 anduril.main(sradownload)
 

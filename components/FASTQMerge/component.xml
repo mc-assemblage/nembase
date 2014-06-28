@@ -11,7 +11,7 @@
 		<type-parameter name="FASTQ"/>
 	</type-parameters>
 	<inputs>
-		<input name="array" type="T" array="true"></input>
+		<input name="in_array" type="T" array="true"></input>
 	</inputs>
 	<outputs>
 		<output name="output" type="FASTQ"></output>

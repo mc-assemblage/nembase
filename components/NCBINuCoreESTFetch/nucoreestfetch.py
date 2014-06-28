@@ -1,5 +1,6 @@
-from anduril.args import *
+from anduril import constants
 from xml.etree import ElementTree
+import anduril.main
 import csv
 import random
 import time
@@ -15,31 +16,44 @@ def getURL(url, params={}):
 		mechanism if the request fails."""
 	if params:
 		url += urllib.urlencode(params)
-	response = None
+	data = None
 	while True:
 		try:
 			request = urllib2.Request(url)
 			response = urllib2.urlopen(request)
+			data = response.read()
 			break
 		except urllib2.HTTPError:
 			time.sleep(random.uniform(0, 0.5))
 		except urllib2.URLError:
 			time.sleep(random.uniform(1, 10))
-	return response.read()
+		except httplib.BadStatusLine:
+			time.sleep(random.uniform(1, 10))
+		except httplib.IncompleteRead:
+			time.sleep(random.uniform(1, 10))
+	return data
 
 
-idlist = []
-reader = csv.reader(open(resultlist, 'rb'), quoting=csv.QUOTE_NONE)
-for row in reader:
-	if len(row) > 0: idlist.append(row[0])
+def nucoreESTFetch(cf):
+	"""Read a file containing a list of NCBI ids and retrieve the records."""
+	idlist = []
+	reader = csv.reader(open(cf.get_input('resultlist'), 'U'), quoting=csv.QUOTE_NONE)
+	for row in reader:
+		if len(row) > 0: idlist.append(row[0])
 
-outfh = open(nucoreestfetch, 'w')
-for i in range(0, len(idlist), retmax):
- 	params = {'db':'nucest', 'id':','.join(idlist[i:i+retmax]), 'retmode':retmode, \
- 		'rettype':rettype}
- 	data = getURL(EFETCH_URL, params)
- 	outfh.write(data)
-outfh.close()
+	retmax = cf.get_parameter('retmax', 'int')
+	retmode = cf.get_parameter('retmode', 'string')
+	rettype = cf.get_parameter('rettype', 'string')
+	
+	outfh = open(cf.get_output('nucoreestfetch'), 'w')
+	for i in range(0, len(idlist), retmax):
+	 	params = {'db':'nucest', 'id':','.join(idlist[i:i+retmax]), 'retmode':retmode, \
+	 		'rettype':rettype}
+	 	data = getURL(EFETCH_URL, params)
+	 	outfh.write(data)
+	outfh.close()
+	return constants.OK
+anduril.main(nucoreESTFetch)
 
 	
 	

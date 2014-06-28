@@ -2,22 +2,17 @@
 	<name>NewblerCDNAAsm</name>
 	<version>1.0</version>
 	<doc>Perform a transcriptome assembly using the newbler assembler.</doc>
-	<!--
-	<launcher type="bash">
-		<argument name="file" value="newblercdnaasm.sh" />
-	</launcher>
-	-->
 	<launcher type="python">
 		<argument name="file" value="newblercdnaasm.py" />
 	</launcher>
-	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
 	<type-parameters>
 		<type-parameter name="T"/>
 		<type-parameter name="FASTA"/>
 		<type-parameter name="NewblerASMDIR"/>
 	</type-parameters>
 	<inputs>
-		<input name="array" type="T" array="true"></input>
+		<input name="inputfiles" type="T" array="true"></input>
 		<input name="vectortrimming" type="FASTA" optional="true"></input>
 	</inputs>
 	<outputs>

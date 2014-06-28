@@ -1,53 +1,53 @@
-from anduril.args import *
+from anduril import constants
+from anduril.arrayio import get_array
+import anduril.main
+import os.path
 import subprocess
 import sys
 import time
 
 
-def runCommand(cmd, args, cwd=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
-	"""Execute a command and return its output."""
-	args = (cmd,) + tuple(args)
-	popen = subprocess.Popen(args, stdout=stdout, stderr=stderr, cwd=cwd)
+def runNewblerWithRetry(cf, params, tries):
+	"""Run Newbler with a retry mechanism."""
+	contigfile = os.path.join(cf.get_output('assemblydir'), '454AllContigs.fna')
 	while True:
-		chunk = popen.stdout.read(8)
-		if not chunk:
-			break
-		sys.stdout.write(chunk)
-		sys.stdout.flush()
-	for line in popen.stderr.readlines():
-		sys.stderr.write(line)
-	return popen.poll()
-
-params = ["-o", assemblydir]
-
-if vectortrimming:
-	fh = open(vectortrimming)
-	line = fh.readline()
-	if line and line.startswith(">"):
-		params += ["-vt", vectortrimming]
-	fh.close()
-	
-if large:
-	params.append("-large")
-params += ["-cpu", str(threads), "-cdna", "-m", "-nobig", "-urt"]
+		tries = tries - 1
+		try:
+			subprocess.check_call(['runAssembly'] + params)
+			if os.path.exists(contigfile):
+				break
+			elif tries > 0:
+				cf.write_log("Error running assembly, attempts left %s" % tries)
+				time.sleep(60)
+			else:
+				return constants.GENERIC_ERROR
+		except subprocess.CalledProcessError:
+			if tries > 0:
+				cf.write_log("Error running assembly, attempts left %s" % tries)
+				time.sleep(60)
+			else:
+				return constants.GENERIC_ERROR
+	return constants.OK
 
 
-for key, inputfile in array.items():
-	params.append(inputfile)
-
-tries = retries + 1
-
-while True:
-	tries = tries - 1
-	exitcode = runCommand("runAssembly", params)
-	if exitcode > 0 and tries > 0:
-		print "Error running assembly, attempts left %s" % (tries)
-		if not "-force" in params:
-			params.append("-force")
-		time.sleep(2)
-		continue
-	else:
-		break
+def newbler(cf):
+	"""Execute a Newbler assembly."""
+	params = ['-o', cf.get_output('assemblydir')]
+	vectortrimming = cf.get_input('vectortrimming')
+	if vectortrimming \
+		and os.path.isfile(vectortrimming) \
+		and os.path.getsize(vectortrimming) > 0:
+		params += ['-vt', vectortrimming]
+	if cf.get_parameter('large', 'boolean'):
+		params.append('-large')
+	params += ['-cpu', str(cf.get_parameter('threads')), '-cdna', '-m', '-urt', '-force']
+	inputfiles = get_array(cf, 'inputfiles')
+	for key, inputfile in inputfiles:
+		params.append(inputfile)
+	cf.write_log("Params: %s" % str(params))
+	tries = cf.get_parameter('retries', 'int') + 1
+	return runNewblerWithRetry(cf, params, tries)
+anduril.main(newbler)
 	
 	
 	

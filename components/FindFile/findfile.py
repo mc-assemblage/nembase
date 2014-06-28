@@ -1,11 +1,13 @@
-from anduril.args import *
+from anduril import constants
+from anduril.arrayio import AndurilOutputArray
+import anduril.main
 import fnmatch
 import os
 import os.path
 import stat
 
 
-def findfile(path, pattern):
+def findfile_impl(path, pattern):
 	"""Recursively walk through path looking for files that match pattern."""
 	def walktree(top=".", depthfirst=True):
 		names = os.listdir(top)
@@ -33,9 +35,16 @@ def findfile(path, pattern):
 	return flist
 	
 	
-flist = findfile(basepath, fpattern)
-write_log("Files: %s" % str(flist))
-for i in range(0, len(flist)):
-	filesfound.write(str(i), flist[i])
+def findfile(cf):
+	"""Wrapper for the findfile_impl function."""
+	basepath = cf.get_input('basepath')
+	fpattern = cf.get_parameter('fpattern')
+	filesfound = AndurilOutputArray(cf, 'filesfound')
+	flist = findfile_impl(basepath, fpattern)
+	cf.write_log("Files: %s" % str(flist))
+	for i in range(0, len(flist)):
+		filesfound.write(str(i), flist[i])
+	return constants.OK
+anduril.main(findfile)
 
 

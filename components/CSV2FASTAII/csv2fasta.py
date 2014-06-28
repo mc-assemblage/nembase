@@ -18,7 +18,7 @@ def csv2Fasta(cf):
 	cf.write_log("delimiter: '%s', quotechar: '%s', headercol: %s, sequencecol: %s" % (\
 		delimiter, quotechar, header_col, sequence_col))
 	
-	reader = csv.reader(open(csvfile, 'rb'), delimiter=delimiter, quotechar=quotechar)
+	reader = csv.reader(open(csvfile, 'U'), delimiter=delimiter, quotechar=quotechar)
 	outfh = open(fastafile, 'w')
 	for row in reader:
 		header = row[header_col]
