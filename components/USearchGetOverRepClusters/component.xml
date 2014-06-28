@@ -1,0 +1,26 @@
+<component>
+	<name>USearchGetOverRepClusters</name>
+	<version>1.0</version>
+	<doc>Extract the seed of a cluster where the cluster is overrepresented in a 
+		fastqfile.</doc>
+	<launcher type="python">
+		<argument name="file" value="getoverrepclusters.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="UCFILE"/>
+		<type-parameter name="FASTQ"/>
+	</type-parameters>
+	<inputs>
+		<input name="resultsuc" type="UCFILE"></input>
+		<input name="resultsfa" type="FASTA"></input>
+		<input name="fastqfile" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="resultsfa" type="FASTA"></output>
+	</outputs>
+	<parameters>
+		<parameter name="percRep" type="float" default="10.0"></parameter>
+	</parameters>
+</component>

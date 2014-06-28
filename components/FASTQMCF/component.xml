@@ -1,0 +1,27 @@
+<component>
+	<name>FASTQMCF</name>
+	<version>1.0</version>
+	<doc>Perform quality filtering and adapter trimming on a FASTQ file.</doc>
+	<launcher type="python">
+		<argument name="file" value="fastqmcf.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTQ"/>
+		<type-parameter name="FASTA"/>
+	</type-parameters>
+	<inputs>
+		<input name="left" type="FASTQ"></input>
+		<input name="right" type="FASTQ"></input>
+		<input name="single" type="FASTQ"></input>
+		<input name="adapters" type="FASTA"></input>
+	</inputs>
+	<outputs>
+		<output name="outputleft" type="FASTQ"></output>
+		<output name="outputright" type="FASTQ"></output>
+		<output name="outputsingle" type="FASTQ"></output>
+	</outputs>
+	<parameters>
+		<parameter name="rmDupLength" type="int" default="0"></parameter>
+	</parameters>
+</component>

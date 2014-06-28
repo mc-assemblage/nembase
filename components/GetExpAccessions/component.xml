@@ -1,0 +1,22 @@
+<component>
+	<name>GetExpAccessions</name>
+	<version>1.0</version>
+	<doc>Take the output of NCBISRAFetch and parse the experiment accessions.</doc>
+	<launcher type="python">
+		<argument name="file" value="getexpaccessions.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="NCBISRAFetchXML"/>
+		<type-parameter name="CSV"/>
+	</type-parameters>
+	<inputs>
+		<input name="srafetchxml" type="NCBISRAFetchXML"></input>
+	</inputs>
+	<outputs>
+		<output name="sraexplist" type="CSV"></output>
+	</outputs>
+	<parameters>
+		<parameter name="platform" type="string" default=""></parameter>
+	</parameters>
+</component>

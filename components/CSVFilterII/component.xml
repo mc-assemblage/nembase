@@ -1,0 +1,32 @@
+<component>
+	<name>CSVFilterII</name>
+	<version>1.0</version>
+	<doc>Filter a CSV file based on a number of criteria.</doc>
+	<launcher type="python">
+		<argument name="file" value="csvfilter.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="CSV"/>
+	</type-parameters>
+	<inputs>
+		<input name="inputfile" type="CSV"></input>
+	</inputs>
+	<outputs>
+		<output name="outputfile" type="CSV"></output>
+	</outputs>
+	<parameters>
+		<parameter name="delimiter" type="string" default="tab">
+			<doc>Use the 'tab' string to specify the '\t' character as it doesn't seem 
+				to parse correctly.</doc>
+		</parameter>
+		<parameter name="commentchar" type="string" default="">
+			<doc>Character to use for comments. Lines starting with a comment are 
+				completely ignored and omitted from the output.</doc>
+		</parameter>
+		<parameter name="collist" type="string" default="*">
+			<doc>A comma separated string containing a list of column indices to include 
+				in the output file.</doc>
+		</parameter>
+	</parameters>
+</component>

@@ -1,0 +1,32 @@
+<component>
+	<name>GetFromArrayByKey</name>
+	<version>1.0</version>
+	<doc>Read a set of keys from a file and read the values from an array.</doc>
+	<launcher type="python">
+		<argument name="file" value="getfromarraybykey.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="T"/>
+	</type-parameters>
+	<inputs>
+		<input name="in_array" array="true" type="T"></input>
+		<input name="keys" type="CSV"></input>
+	</inputs>
+	<outputs>
+		<output name="out_array" array="true" type="T"></output>
+	</outputs>
+	<parameters>
+		<parameter name="delimiter" type="string" default="tab">
+			<doc>Use the 'tab' string to specify the '\t' character as it doesn't seem 
+				to parse correctly.</doc>
+		</parameter>
+		<parameter name="commentchar" type="string" default="">
+			<doc>Character to use for comments. Lines starting with a comment are 
+				completely ignored and omitted from the output.</doc>
+		</parameter>
+		<parameter name="keycol" type="int" default="0">
+			<doc>Column to use as keys.</doc>
+		</parameter>
+	</parameters>
+</component>

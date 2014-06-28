@@ -1,0 +1,28 @@
+<component>
+	<name>MIRAEST</name>
+	<version>1.0</version>
+	<doc>Perform an EST transcriptome assembly from a FASTA file using the mira 
+		assembler.</doc>
+	<launcher type="bash">
+		<argument name="file" value="miraest.sh" />
+	</launcher>
+	<requires URL="http://www.gnu.org/software/bash/" type="manual">bash</requires>
+	<type-parameters>
+		<type-parameter name="SSAHA2"/>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="FASTAQUAL"/>
+		<type-parameter name="MiraASMDIR"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastafile" type="FASTA"></input>
+		<input name="fastaqualfile" type="FASTAQUAL" optional="true"></input>
+		<input name="ssaha2out" type="SSAHA2" optional="true"></input>
+	</inputs>
+	<outputs>
+		<output name="mira_assembly" type="MiraASMDIR"></output>
+	</outputs>
+	<parameters>
+		<parameter name="tmpdir" type="string" default=""></parameter>
+		<parameter name="threads" type="int" default="2"></parameter>
+	</parameters>
+</component>

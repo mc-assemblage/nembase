@@ -1,0 +1,24 @@
+<component>
+	<name>SRA2FASTQ</name>
+	<version>1.0</version>
+	<doc>Convert an SRA file into a fastq file.</doc>
+	<launcher type="python">
+		<argument name="file" value="sra2fastq.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="NCBISRAFile"/>
+		<type-parameter name="NCBISRAFetchXML"/>
+		<type-parameter name="FASTQ"/>
+	</type-parameters>
+	<inputs>
+		<input name="srafile" type="NCBISRAFile"></input>
+		<input name="srafetchxml" type="NCBISRAFetchXML" optional="true"></input>
+	</inputs>
+	<outputs>
+		<output name="fastqfile" type="FASTQ"></output>
+	</outputs>
+	<parameters>
+		<parameter name="accession" type="string" default=""></parameter>
+	</parameters>
+</component>

@@ -1,0 +1,33 @@
+<component>
+	<name>GetFromFASTAByName</name>
+	<version>1.0</version>
+	<doc>Retrieve sequences from a FASTA file by name.</doc>
+	<launcher type="python">
+		<argument name="file" value="getfromfastabyname.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+	</type-parameters>
+	<inputs>
+		<input name="namelist" type="CSV"></input>
+		<input name="fastafile" type="FASTA"></input>
+	</inputs>
+	<outputs>
+		<output name="outputfile" type="FASTA"></output>
+	</outputs>
+	<parameters>
+		<parameter name="regexp" type="boolean" default="false">
+			<doc>Treat names as regular expressions.</doc>
+		</parameter>
+		<parameter name="partial" type="boolean" default="false">
+			<doc>Extract records that contain a partial header match.</doc>
+		</parameter>
+		<parameter name="negate" type="boolean" default="false">
+			<doc>Extract records that do not match.</doc>
+		</parameter>
+		<parameter name="delimiter" type="string" default="tab">
+			<doc>Delimiter to use for the namelist CSV file.</doc>
+		</parameter>
+	</parameters>
+</component>

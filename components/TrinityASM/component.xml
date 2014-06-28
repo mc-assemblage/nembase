@@ -1,0 +1,25 @@
+<component>
+	<name>TrinityASM</name>
+	<version>1.0</version>
+	<doc>Perform a transcriptome assembly of an RNA-Seq fastqfile.</doc>
+	<launcher type="python">
+		<argument name="file" value="trinity.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTQ"/>
+		<type-parameter name="TRINITYASMDIR"/>
+	</type-parameters>
+	<inputs>
+		<input name="inputleft" type="FASTQ"></input>
+		<input name="inputright" type="FASTQ"></input>
+		<input name="inputsingle" type="FASTQ"></input>
+	</inputs>
+	<outputs>
+		<output name="assemblydir" type="TRINITYASMDIR"></output>
+	</outputs>
+	<parameters>
+		<parameter name="jellymem" type="string" default="100G"></parameter>
+		<parameter name="CPU" type="int" default="12"></parameter>
+	</parameters>
+</component>

@@ -1,0 +1,21 @@
+<component>
+	<name>CAP3</name>
+	<version>1.0</version>
+	<doc>Perform a CAP3 assembly.</doc>
+	<launcher type="python">
+		<argument name="file" value="cap3.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="FASTA"/>
+		<type-parameter name="FASTAQUAL"/>
+		<type-parameter name="CAP3ASMDIR"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastafile" type="FASTA"></input>
+		<input name="fastaqualfile" type="FASTAQUAL"></input>
+	</inputs>
+	<outputs>
+		<output name="assemblydir" type="CAP3ASMDIR"></output>
+	</outputs>
+</component>

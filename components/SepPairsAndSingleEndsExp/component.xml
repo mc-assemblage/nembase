@@ -1,0 +1,25 @@
+<component>
+	<name>SepPairsAndSingleEndsExp</name>
+	<version>1.0</version>
+	<doc>Take an array of runs in an experiment, separate the pair ends into two separate 
+		files and the single end reads into a third.
+		</doc>
+	<launcher type="python">
+		<argument name="file" value="seppairsandsingles.py" />
+	</launcher>
+	<requires URL="http://www.python.org/" type="manual">python</requires>
+	<type-parameters>
+		<type-parameter name="T"/>
+		<type-parameter name="NCBISRAFetchXML"/>
+		<type-parameter name="FASTQ"/>
+	</type-parameters>
+	<inputs>
+		<input name="fastqfiles" type="T" array="true"></input>
+		<input name="srafetchxml" type="NCBISRAFetchXML"></input>
+	</inputs>
+	<outputs>
+		<output name="left" type="FASTQ"></output>
+		<output name="right" type="FASTQ"></output>
+		<output name="single" type="FASTQ"></output>
+	</outputs>
+</component>
